@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://o2jnugjdoi0c"]
+
+[ext_resource type="Script" path="res://Scenes/fruit.gd" id="1_20qfc"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_828um"]
+friction = 0.75
+bounce = 0.13
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_s3bin"]
+resource_local_to_scene = true
+radius = 8.0
+
+[node name="Fruit" type="RigidBody2D" groups=["fruits"]]
+rotation = -0.00101107
+physics_material_override = SubResource("PhysicsMaterial_828um")
+max_contacts_reported = 10
+contact_monitor = true
+script = ExtResource("1_20qfc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_s3bin")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
