@@ -1,12 +1,16 @@
 extends RigidBody2D
-@onready var fruit: RigidBody2D = $"."
+const FRUIT: PackedScene = preload("res://Scenes/fruit.tscn")
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
+@onready var label: Label = $Label
+
 var size: int = 1
 var max_size:int = 11
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	collision_shape_2d.shape.radius = 14 + (size - 1) * 6
+	collision_shape_2d.shape.radius = 15 + (size-1) * 7
+	label.text = str(size)
+
 
 func _draw() -> void:
 	var color: Color = Color.from_hsv(float(size) / max_size, 1,1)
@@ -16,16 +20,16 @@ func _on_body_entered(body: Node) -> void:
 	if not body.is_in_group('fruits') or is_queued_for_deletion():
 		return
 	var new_fruit_position:Vector2 =  (body.global_position + global_position) / 2
-	SignalBus.collided.emit(new_fruit_position.y)
+	SignalBus.collided.emit(body)
 	
 	if body.size != size:
 		return
-	
+	return
 	body.queue_free()
 	queue_free()
 	
 	if size < max_size:
-		var new_fruit: RigidBody2D = fruit.instantiate()
+		var new_fruit: RigidBody2D = FRUIT.instantiate()
 		new_fruit.global_position = new_fruit_position
 		new_fruit.size = size + 1
 		get_parent().call_deferred("add_child", new_fruit)
@@ -43,3 +47,4 @@ func enable_physics() -> void:
 	await get_tree().create_timer(0.25).timeout
 	collision_layer = 1
 	collision_mask = 1
+	

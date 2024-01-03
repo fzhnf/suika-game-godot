@@ -1,28 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://dkp7oly5rxtik"]
+[gd_scene load_steps=10 format=3 uid="uid://dkp7oly5rxtik"]
 
 [ext_resource type="Texture2D" uid="uid://b2bndmofqaixh" path="res://Pink.png" id="1_re3c0"]
-[ext_resource type="Script" path="res://game_scene.gd" id="1_ttffu"]
 [ext_resource type="Texture2D" uid="uid://dwwlcijs70f87" path="res://Suika.webp" id="2_f6cmh"]
-[ext_resource type="Script" path="res://score.gd" id="5_mn8oh"]
+[ext_resource type="Texture2D" uid="uid://d1rmgph4bqwrr" path="res://Fruit.png" id="4_0vpt6"]
+[ext_resource type="Script" path="res://Score.gd" id="5_mn8oh"]
+[ext_resource type="Script" path="res://PhysicProcess.gd" id="5_wgkex"]
+[ext_resource type="PackedScene" uid="uid://bvou0pxeyhc67" path="res://Scenes/lost_screen.tscn" id="6_k1mpq"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_7fkru"]
-font_size = 128
-font_color = Color(1, 1, 1, 0.8)
-outline_size = 19
-outline_color = Color(1, 1, 1, 0.898039)
-shadow_size = 0
+[sub_resource type="LabelSettings" id="LabelSettings_o2i47"]
+font_color = Color(1, 1, 0, 0.784314)
 
-[node name="GameScene" type="Node2D"]
-script = ExtResource("1_ttffu")
+[sub_resource type="LabelSettings" id="LabelSettings_h56c0"]
+font_size = 48
 
-[node name="Background" type="TextureRect" parent="."]
-offset_right = 1152.0
-offset_bottom = 650.0
-rotation = -0.00101107
-texture = ExtResource("1_re3c0")
-expand_mode = 1
-stretch_mode = 1
-flip_h = true
+[sub_resource type="LabelSettings" id="LabelSettings_6u42p"]
+font_size = 24
+
+[node name="GameScene" type="Node"]
 
 [node name="Temp" type="Sprite2D" parent="."]
 visible = false
@@ -30,51 +24,116 @@ position = Vector2(576.298, 324.5)
 scale = Vector2(1.77322, 1.77322)
 texture = ExtResource("2_f6cmh")
 
-[node name="BoxBody" type="StaticBody2D" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
+show_behind_parent = true
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("1_re3c0")
+stretch_mode = 1
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BoxBody"]
-polygon = PackedVector2Array(362, 156, 362, 622, 791, 622, 791, 156, 778, 156, 778, 610, 375, 610, 375, 156)
+[node name="PhysicProcess" type="Node2D" parent="."]
+script = ExtResource("5_wgkex")
 
-[node name="NextFruitMarker" type="Marker2D" parent="."]
+[node name="BoxBody" type="StaticBody2D" parent="PhysicProcess"]
 
-[node name="Label" type="Label" parent="NextFruitMarker"]
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PhysicProcess/BoxBody"]
+polygon = PackedVector2Array(362, 144, 362, 622, 791, 622, 791, 144, 778, 144, 778, 610, 375, 610, 375, 144)
 
-[node name="TextureRect" type="TextureRect" parent="NextFruitMarker"]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="NextFruitMarker" type="Marker2D" parent="PhysicProcess"]
+position = Vector2(979, 166)
 
-[node name="ScoreLayer" type="CanvasLayer" parent="."]
+[node name="TextureRect" type="TextureRect" parent="PhysicProcess/NextFruitMarker"]
+self_modulate = Color(0.862745, 0.682353, 0.756863, 0.501961)
+offset_left = -90.0
+offset_top = -90.0
+offset_right = 517.0
+offset_bottom = 517.0
+scale = Vector2(0.294807, 0.294807)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_0vpt6")
+
+[node name="Label" type="Label" parent="PhysicProcess/NextFruitMarker"]
+offset_left = -39.0
+offset_top = -100.0
+offset_right = 39.0
+offset_bottom = -77.0
+text = "Next Fruit"
+label_settings = SubResource("LabelSettings_o2i47")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreMarker" type="Marker2D" parent="PhysicProcess"]
+position = Vector2(170, 146)
 script = ExtResource("5_mn8oh")
 
-[node name="CurrentScoreLabel" type="Label" parent="ScoreLayer"]
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="TextureRect" type="TextureRect" parent="PhysicProcess/ScoreMarker"]
+self_modulate = Color(0.862745, 0.682353, 0.756863, 0.501961)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -107.0
+offset_top = -107.0
+offset_right = 108.0
+offset_bottom = 108.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_0vpt6")
+expand_mode = 1
 
-[node name="HighestScoreLabel" type="Label" parent="ScoreLayer"]
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="CurrentScoreLabel" type="Label" parent="PhysicProcess/ScoreMarker"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -55.0
+offset_right = 20.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+label_settings = SubResource("LabelSettings_h56c0")
+horizontal_alignment = 1
 
-[node name="BestScoreLabel" type="Label" parent="ScoreLayer"]
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="HighestScoreLabel" type="Label" parent="PhysicProcess/ScoreMarker"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 24.0
+offset_right = 20.0
+offset_bottom = 58.0
+grow_horizontal = 2
+text = "0"
+label_settings = SubResource("LabelSettings_6u42p")
+horizontal_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="ScoreLayer"]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="BestScoreLabel" type="Label" parent="PhysicProcess/ScoreMarker"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.5
+offset_top = 3.5
+offset_right = 46.5
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "BEST SCORE"
 
-[node name="LeftMarker" type="Marker2D" parent="."]
+[node name="LeftMarker" type="Marker2D" parent="PhysicProcess"]
+position = Vector2(376, 88)
 
-[node name="RightMarker" type="Marker2D" parent="."]
+[node name="RightMarker" type="Marker2D" parent="PhysicProcess"]
+position = Vector2(777, 88)
 
-[node name="TopMarker" type="Marker2D" parent="."]
+[node name="TopMarker" type="Marker2D" parent="PhysicProcess"]
+position = Vector2(568, 142)
 
-[node name="GameLostLabel" type="Label" parent="."]
+[node name="LostScreen" parent="." instance=ExtResource("6_k1mpq")]
 visible = false
-offset_left = 318.0
-offset_top = 159.0
-offset_right = 845.0
-offset_bottom = 334.0
-text = "You Lost"
-label_settings = SubResource("LabelSettings_7fkru")

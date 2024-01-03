@@ -1,4 +1,4 @@
-extends CanvasLayer
+extends Marker2D
 
 @onready var current_score_label: Label = $CurrentScoreLabel
 @onready var highest_score_label: Label = $HighestScoreLabel
@@ -8,8 +8,9 @@ var current_score: int = 0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
-	SignalBus.fruit_combined.connect(combine_result)
-	SignalBus.game_result.connect(find_highest_score)
+	SignalBus.fruit_combined.connect(combine_score)
+	SignalBus.game_over.connect(find_highest_score)
+	SignalBus.fruit_spawned.connect(spawn_score)
 	load_file()
 
 func load_file() -> void:
@@ -19,7 +20,11 @@ func load_file() -> void:
 	else:
 		highest_score_label.text = str(0)
 		
-func combine_result(size:int) -> void:
+func combine_score(size:int) -> void:
+	current_score += (size+1) - (size+size) 
+	current_score_label.text = str(current_score)
+
+func spawn_score(size:int) -> void:
 	current_score += size
 	current_score_label.text = str(current_score)
 	
