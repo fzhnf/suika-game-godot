@@ -23,6 +23,10 @@ SignalBus="*res://signal_bus.gd"
 
 window/stretch/mode="canvas_items"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 click={

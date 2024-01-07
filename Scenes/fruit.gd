@@ -1,6 +1,7 @@
 extends RigidBody2D
-@onready var fruit: RigidBody2D = $"."
+const FRUIT = preload("res://Scenes/fruit.tscn")
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
+@onready var label: Label = $Label
 var size: int = 1
 var max_size:int = 11
 
@@ -11,6 +12,7 @@ func _ready() -> void:
 func _draw() -> void:
 	var color: Color = Color.from_hsv(float(size) / max_size, 1,1)
 	draw_circle(Vector2.ZERO, collision_shape_2d.shape.radius, color)
+	label.text = str(size)
 
 func _on_body_entered(body: Node) -> void:
 	if not body.is_in_group('fruits') or is_queued_for_deletion():
@@ -25,7 +27,7 @@ func _on_body_entered(body: Node) -> void:
 	queue_free()
 	
 	if size < max_size:
-		var new_fruit: RigidBody2D = fruit.instantiate()
+		var new_fruit: RigidBody2D = FRUIT.instantiate()
 		new_fruit.global_position = new_fruit_position
 		new_fruit.size = size + 1
 		get_parent().call_deferred("add_child", new_fruit)

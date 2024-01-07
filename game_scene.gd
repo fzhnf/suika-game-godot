@@ -6,7 +6,7 @@ const FRUIT = preload("res://Scenes/fruit.tscn")
 @onready var right_marker: Marker2D = $RightMarker
 @onready var top_marker: Marker2D = $TopMarker
 @onready var game_lost_label: Label = $GameLostLabel
-
+@export var character: AnimatedSprite2D
 var current_fruit: RigidBody2D
 var next_fruit: RigidBody2D
 var is_over: bool = false
@@ -19,6 +19,9 @@ func _ready() -> void:
 	pass
 	
 func _physics_process(_delta: float) -> void:
+	if character != null:
+		character.global_position.x = get_char_x()
+		character.global_position.y = left_marker.global_position.y
 	if is_over:
 		return
 	if current_fruit != null:
@@ -38,6 +41,7 @@ func create_fruit(pos: Vector2) -> RigidBody2D:
 	
 func drop_fruit() -> void:
 	current_fruit.enable_physics()
+	SignalBus.fruit_spawned.emit(current_fruit.size)
 	current_fruit = null
 	await get_tree().create_timer(0.25).timeout
 	current_fruit = next_fruit
@@ -55,6 +59,14 @@ func get_fruit_x()-> float:
 			right_marker_x
 		)
 
+func get_char_x()-> float:
+	var left_marker_x:float = left_marker.global_position.x
+	var right_marker_x:float = right_marker.global_position.x 
+	return clamp(
+		get_global_mouse_position().x,
+		left_marker_x,
+		right_marker_x
+	)
 func detect_game_over(height:float) -> void:
 	if height < top_marker.global_position.y:
 		is_over = true
