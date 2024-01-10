@@ -7,7 +7,7 @@ var max_size:int = 11
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	collision_shape_2d.shape.radius = 14 + (size - 1) * 6
+		collision_shape_2d.shape.radius = 14 + (size - 1) * 6
 
 func _draw() -> void:
 	var color: Color = Color.from_hsv(float(size) / max_size, 1,1)
@@ -17,12 +17,13 @@ func _draw() -> void:
 func _on_body_entered(body: Node) -> void:
 	if not body.is_in_group('fruits') or is_queued_for_deletion():
 		return
+	
 	var new_fruit_position:Vector2 =  (body.global_position + global_position) / 2
-	SignalBus.collided.emit(new_fruit_position.y)
+	var height = new_fruit_position.y - body.get_node("CollisionShape2D").get_shape().get_radius()
+	SignalBus.collided.emit(height)
 	
 	if body.size != size:
 		return
-	
 	body.queue_free()
 	queue_free()
 	

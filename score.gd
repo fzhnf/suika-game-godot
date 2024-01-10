@@ -12,7 +12,7 @@ func _ready() -> void:
 	SignalBus.fruit_spawned.connect(spawn_resuilt)
 	SignalBus.game_result.connect(find_highest_score)
 	load_file()
-	
+
 
 func load_file() -> void:
 	if FileAccess.file_exists(SAVE_PATH):
@@ -24,10 +24,12 @@ func load_file() -> void:
 func combine_result(size:int) -> void:
 	current_score += (size+1) - 2 * (size)
 	current_score_numbers.text = str(current_score)
+	
 func spawn_resuilt(size:int) -> void:
 	current_score += size
 	current_score_numbers.text = str(current_score)
-	pass	
+	
+
 func find_highest_score() -> void:
 	var highest_score: String = str(max(int(current_score_numbers.text), int(best_score_numbers.text)))
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
